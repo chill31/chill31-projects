@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --accent: #7ACBEF;
+  --bg: #292e35;
+  --gray: #cdcdcd;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: white;
+  padding-block: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+}
+
+button, input {
+  font-family: 'Inter', sans-serif;
+}
+
+button:focus, input:focus {
+  outline-offset: 1px;
+  outline: solid 1px var(--accent);
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+}
+
+p, span, div, a, button, input {
+  font-weight: 400;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+}
+
+.title {
+  font-size: 4.8rem;
+  color: var(--accent);
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: var(--gray);
+}
+
+section.repository-list {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 98vw;
+  justify-content: center;
+}
+
+.repository {
+  background-color: rgba(0, 0, 0, 0.315);
+  padding-inline: .7rem;
+  padding-block: 1.5rem;
+  border-radius: .3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 30rem;
+  max-width: calc(98vw - 1.4rem);
+  position: relative;
+}
+
+.repo-title {
+  width: 100%;
+  text-align: center;
+  font-size: 1.7rem;
+}
+
+.repo-description {
+  text-align: center;
+  width: calc(100% - 2rem);
+  margin-inline: 1rem;
+  height: 7ch;
+  margin-top: .5rem;
+}
+
+.no-repo-description {
+  color: var(--gray);
+  font-style: italic;
+  text-align: center;
+  width: 100%;
+  height: 7ch;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .repo-title {
+    font-size: 1.45rem;
+  }
+
+  .repo-description {
+    font-size: .9rem;
+  }
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--gray);
+  opacity: .5;
+  margin-block: 3rem;
+}
+
+.repo-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.info-span {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+
+.info-span strong {
+  font-size: 1.1rem;
+}
+
+.span-data {
+  display: flex;
+  gap: .2rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.span-data svg path {
+  fill: white;
+}
