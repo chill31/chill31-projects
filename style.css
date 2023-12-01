@@ -223,7 +223,7 @@ section.repository-list {
   height: 1px;
   background-color: var(--gray);
   opacity: .5;
-  margin-block: 3rem;
+  margin-block: 2rem;
 }
 
 .repo-info {
