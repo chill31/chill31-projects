@@ -56,13 +56,17 @@ const currentTimestamp = new Date().getTime();
 const cacheAgeInDays = (currentTimestamp - cacheTimestamp) / (1000 * 60 * 60 * 24);
 
 if (cacheTimestamp && cacheAgeInDays < 15) {
+
   const cachedData = JSON.parse(localStorage.getItem("repoCache"));
   const cachedLanguages = JSON.parse(localStorage.getItem("repoLanguagesCache"));
   displayRepos(cachedData, cachedLanguages);
+
 } else {
+
   fetch("https://api.github.com/users/chill31/repos")
     .then(response => response.json())
-    .then(data => {
+    .then(async data => {
+
       if (data.message === 'Not Found') {
         showError();
         return;
@@ -90,34 +94,19 @@ if (cacheTimestamp && cacheAgeInDays < 15) {
         return new Date(b.created_at) - new Date(a.created_at);
       });
 
-      let languages = [];
+      const fetched = await fetchLanguages(filteredData)
+      localStorage.setItem("repoCache", JSON.stringify(filteredData));
+      localStorage.setItem("repoLanguagesCache", JSON.stringify(languages));
+      localStorage.setItem("repoCacheTimestamp", currentTimestamp);
 
-      const languagesPromises = filteredData.map(repo => {
-        return fetch(repo.languages).then(response => response.json()).then(l => {
+      displayRepos(filteredData, languages);
 
-          console.log(l);
-          languages.push(l);
-
-        }).catch(error => {
-          console.log(error);
-          showError();
-        });
-      });
-      Promise.all(languagesPromises).then(() => {
-        localStorage.setItem("repoCache", JSON.stringify(filteredData));
-        localStorage.setItem("repoLanguagesCache", JSON.stringify(languages));
-        localStorage.setItem("repoCacheTimestamp", currentTimestamp);
-
-        displayRepos(filteredData, languages);
-      }).catch(error => {
-        console.log(error);
-        showError();
-      });
     })
     .catch(error => {
       console.log(error);
       showError();
     });
+
 }
 
 function displayRepos(repos, languages) {
@@ -132,10 +121,10 @@ function displayRepos(repos, languages) {
 
     const languagesString = languages[index] ? Object.keys(languages[index]).map(language => {
 
-      const percentage =
-        Math
-          .round((languages[index][language] / Object.values(languages[index])
-            .reduce((a, b) => a + b, 0)) * 100);
+      let percentage = (languages[index][language] / Object.values(languages[index]).reduce((a, b) => a + b, 0)) * 100
+      percentage = Math.round(percentage * 100) / 100;
+
+      if (percentage === 0) return '';
 
       return `<span class="language" style="background-color: #${colorsMap[language]}; width: ${percentage}%; height: 1rem;"></span>`;
 
@@ -143,10 +132,8 @@ function displayRepos(repos, languages) {
 
     const languagesKeys = languages[index] ? Object.keys(languages[index]).map(language => {
 
-      const percentage =
-        Math
-          .round((languages[index][language] / Object.values(languages[index])
-            .reduce((a, b) => a + b, 0)) * 100);
+      let percentage = (languages[index][language] / Object.values(languages[index]).reduce((a, b) => a + b, 0)) * 100
+      percentage = Math.round(percentage * 100) / 100;
 
       const html =
         `<span class="language-key">
@@ -230,4 +217,19 @@ function showError() {
   localStorage.removeItem("repoCache");
   localStorage.removeItem("repoLanguagesCache");
   localStorage.removeItem("repoCacheTimestamp");
+}
+
+async function fetchLanguages(filteredData) {
+  const languages = [];
+  for (const repo of filteredData) {
+    try {
+      const response = await fetch(repo.languages);
+      const language = await response.json();
+      languages.push(language);
+    } catch (error) {
+      console.log(error);
+      showError();
+    }
+  }
+  return languages;
 }
