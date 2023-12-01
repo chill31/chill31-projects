@@ -95,6 +95,7 @@ if (cacheTimestamp && cacheAgeInDays < 15) {
       const languagesPromises = filteredData.map(repo => {
         return fetch(repo.languages).then(response => response.json()).then(l => {
 
+          console.log(l);
           languages.push(l);
 
         }).catch(error => {
@@ -102,12 +103,16 @@ if (cacheTimestamp && cacheAgeInDays < 15) {
           showError();
         });
       });
+      Promise.all(languagesPromises).then(() => {
+        localStorage.setItem("repoCache", JSON.stringify(filteredData));
+        localStorage.setItem("repoLanguagesCache", JSON.stringify(languages));
+        localStorage.setItem("repoCacheTimestamp", currentTimestamp);
 
-      localStorage.setItem("repoCache", JSON.stringify(filteredData));
-      localStorage.setItem("repoLanguagesCache", JSON.stringify(languages));
-      localStorage.setItem("repoCacheTimestamp", currentTimestamp);
-
-      displayRepos(filteredData);
+        displayRepos(filteredData, languages);
+      }).catch(error => {
+        console.log(error);
+        showError();
+      });
     })
     .catch(error => {
       console.log(error);
@@ -128,29 +133,29 @@ function displayRepos(repos, languages) {
     const languagesString = languages[index] ? Object.keys(languages[index]).map(language => {
 
       const percentage =
-      Math
-      .round((languages[index][language] / Object.values(languages[index])
-      .reduce((a, b) => a + b, 0)) * 100);
+        Math
+          .round((languages[index][language] / Object.values(languages[index])
+            .reduce((a, b) => a + b, 0)) * 100);
 
       return `<span class="language" style="background-color: #${colorsMap[language]}; width: ${percentage}%; height: 1rem;"></span>`;
 
     }).join('') : '';
 
     const languagesKeys = languages[index] ? Object.keys(languages[index]).map(language => {
-        
-        const percentage =
+
+      const percentage =
         Math
-        .round((languages[index][language] / Object.values(languages[index])
-        .reduce((a, b) => a + b, 0)) * 100);
-  
-        const html =
-`<span class="language-key">
+          .round((languages[index][language] / Object.values(languages[index])
+            .reduce((a, b) => a + b, 0)) * 100);
+
+      const html =
+        `<span class="language-key">
   <span class="lang-bullet" style="background-color: #${colorsMap[language]}"></span>
   <span class="lang-name">${language}</span>
   <span class="lang-percentage">${percentage}%</span>
 </span>`;
 
-        return html;
+      return html;
     }).join('') : '';
 
     repoEl.innerHTML =
