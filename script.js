@@ -102,6 +102,8 @@ if (cacheTimestamp && cacheAgeInDays < 15) {
       localStorage.setItem("repoLanguagesCache", JSON.stringify(fetched));
       localStorage.setItem("repoCacheTimestamp", currentTimestamp);
 
+
+      displayRepos(filteredData, fetched);
     })
     .catch(error => {
       console.log(error);
