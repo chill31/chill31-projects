@@ -6,7 +6,7 @@ const colorsMap = {
   "C++": "f34b7d",
   "C": "555555",
   "Shell": "89e051",
-  "TypeScript": "2b7489",
+  "TypeScript": "3178c6",
   "Ruby": "701516",
   "Java": "b07219",
   "Go": "00add8",
@@ -19,7 +19,6 @@ const colorsMap = {
   "Scala": "c22d40",
   "Dart": "00b4ab",
   "Kotlin": "f18e33",
-  "Vue": "2c3e50",
   "Clojure": "db5855",
   "Lua": "000080",
   "Assembly": "6E4C13",
@@ -33,7 +32,7 @@ const colorsMap = {
   "R": "198ce7",
   "Makefile": "427819",
   "TeX": "3d6117",
-  "Vue": "2c3e50",
+  "Vue": "41b883",
   "Clojure": "db5855",
   "Lua": "000080",
   "Assembly": "6E4C13",
@@ -50,6 +49,7 @@ const colorsMap = {
 };
 
 const repoList = document.querySelector(".repository-list");
+const fetchMessageSpan = document.querySelector(".fetch-message");
 
 const cacheTimestamp = localStorage.getItem("repoCacheTimestamp");
 const currentTimestamp = new Date().getTime();
@@ -59,9 +59,12 @@ if (cacheTimestamp && cacheAgeInDays < 15) {
 
   const cachedData = JSON.parse(localStorage.getItem("repoCache"));
   const cachedLanguages = JSON.parse(localStorage.getItem("repoLanguagesCache"));
-  displayRepos(cachedData, cachedLanguages);
+
+    displayRepos(cachedData, cachedLanguages);
 
 } else {
+
+  showFetchMessages();
 
   fetch("https://api.github.com/users/chill31/repos")
     .then(response => response.json())
@@ -99,8 +102,6 @@ if (cacheTimestamp && cacheAgeInDays < 15) {
       localStorage.setItem("repoLanguagesCache", JSON.stringify(fetched));
       localStorage.setItem("repoCacheTimestamp", currentTimestamp);
 
-      displayRepos(filteredData, fetched);
-
     })
     .catch(error => {
       console.log(error);
@@ -110,6 +111,7 @@ if (cacheTimestamp && cacheAgeInDays < 15) {
 }
 
 function displayRepos(repos, languages) {
+  fetchMessageSpan.style.display = "none";
   repos.forEach((repo, index) => {
     const repoEl = document.createElement("div");
     repoEl.classList.add("repository");
@@ -232,4 +234,29 @@ async function fetchLanguages(filteredData) {
     }
   }
   return languages;
+}
+
+function showFetchMessages() {
+  const randomFetchMessages = [
+    "Be patient...",
+    "Just believe in the process...",
+    "Almost there",
+    "Fetching data from GitHub...",
+    "Getting the projects...",
+  ];
+
+  let previousChoice = '';
+  const msgInterval = setInterval(() => {
+    let choice = randomFetchMessages[Math.floor(Math.random() * randomFetchMessages.length)];
+    while (choice === previousChoice) {
+      choice = randomFetchMessages[Math.floor(Math.random() * randomFetchMessages.length)];
+    }
+    previousChoice = choice;
+    fetchMessageSpan.textContent = choice;
+  }, 1500);
+
+  setTimeout(() => {
+    clearInterval(msgInterval);
+    fetchMessageSpan.textContent = "This is taking longer than expected...";
+  }, 5000);
 }
