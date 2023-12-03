@@ -108,12 +108,35 @@ section.repository-list {
   width: 30rem;
   max-width: calc(98vw - 1.4rem);
   position: relative;
+  opacity: 0;
+  transform: translate(4%);
+  transition: 400ms ease-in;
+}
+
+.repository.visible {
+  opacity: 1;
+  transform: unset;
+}
+
+.repository * {
+  opacity: 0;
+  transition: 400ms 400ms ease-out;
+  transition-property: transform, opacity;
+}
+
+.repository.visible * {
+  opacity: 1;
 }
 
 .repo-title {
   width: 100%;
   text-align: center;
   font-size: 1.7rem;
+  transform: translateY(-30%);
+}
+
+.repository.visible .repo-title {
+  transform: unset;
 }
 
 .repo-description {
@@ -153,6 +176,12 @@ section.repository-list {
   align-items: center;
   margin-top: 1rem;
   border-radius: 500rem;
+  width: 0;
+  transition-property: width, opacity !important;
+}
+
+.repository.visible .repo-languages {
+  width: 100%;
 }
 
 .language {
@@ -189,6 +218,11 @@ section.repository-list {
   align-items: center;
   justify-content: flex-start;
   gap: .5rem;
+  transform: translateX(-40%);
+}
+
+.repository.visible .language-key {
+  transform: unset;
 }
 
 .lang-bullet {
@@ -227,6 +261,11 @@ section.repository-list {
   background-color: var(--accent);
   color: black;
   min-width: max-content;
+  transform: translateY(30%);
+}
+
+.repository.visible .repo-topics .topic {
+  transform: unset;
 }
 
 .divider {
@@ -235,6 +274,10 @@ section.repository-list {
   background-color: var(--gray);
   opacity: .5;
   margin-block: 2rem;
+}
+
+.repo-info * {
+  transition-delay: 800ms !important;
 }
 
 .repo-info {

@@ -60,7 +60,7 @@ if (cacheTimestamp && cacheAgeInDays < 15) {
   const cachedData = JSON.parse(localStorage.getItem("repoCache"));
   const cachedLanguages = JSON.parse(localStorage.getItem("repoLanguagesCache"));
 
-    displayRepos(cachedData, cachedLanguages);
+  displayRepos(cachedData, cachedLanguages);
 
 } else {
 
@@ -112,6 +112,7 @@ if (cacheTimestamp && cacheAgeInDays < 15) {
 
 function displayRepos(repos, languages) {
   fetchMessageSpan.style.display = "none";
+
   repos.forEach((repo, index) => {
     const repoEl = document.createElement("div");
     repoEl.classList.add("repository");
@@ -132,13 +133,13 @@ function displayRepos(repos, languages) {
 
     }).join('') : '';
 
-    const languagesKeys = languages[index] ? Object.keys(languages[index]).map(language => {
+    const languagesKeys = languages[index] ? Object.keys(languages[index]).map((language, langIndex) => {
 
       let percentage = (languages[index][language] / Object.values(languages[index]).reduce((a, b) => a + b, 0)) * 100
       percentage = Math.round(percentage * 100) / 100;
 
       const html =
-        `<span class="language-key">
+        `<span class="language-key" style="transition-delay: ${200*(langIndex+1)}ms">
   <span class="lang-bullet" style="background-color: #${colorsMap[language]}"></span>
   <span class="lang-name">${language}</span>
   <span class="lang-percentage">${percentage}%</span>
@@ -205,6 +206,21 @@ ${repo.description ? `<p class="repo-description">${repo.description}</p>` : '<p
 `;
 
     repoList.appendChild(repoEl);
+  });
+
+  const allRepoCards = document.querySelectorAll('.repository');
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: .3
+  });
+
+  allRepoCards.forEach((card) => {
+    cardObserver.observe(card)
   });
 }
 
