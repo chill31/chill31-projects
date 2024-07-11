@@ -89,8 +89,8 @@ header {
 
 section.repository-list {
   display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
+  gap: 2rem;
   width: 98vw;
   justify-content: center;
 }
@@ -99,12 +99,13 @@ section.repository-list {
   background-color: rgba(0, 0, 0, 0.315);
   padding-inline: .7rem;
   padding-block: 1.5rem;
+  padding-bottom: 5rem;
   border-radius: .3rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
   width: 30rem;
   max-width: calc(98vw - 1.4rem);
   position: relative;
@@ -129,6 +130,7 @@ section.repository-list {
 }
 
 .repo-title {
+  color: var(--accent);
   width: 100%;
   text-align: center;
   font-size: 1.7rem;
@@ -139,30 +141,43 @@ section.repository-list {
   transform: unset;
 }
 
-.repo-description {
-  text-align: center;
-  width: calc(100% - 2rem);
-  margin-inline: 1rem;
-  height: 9ch;
-  overflow-y: auto;
-}
-
-.no-repo-description {
-  color: var(--gray);
-  font-style: italic;
-  text-align: center;
-  width: 100%;
-  height: 9ch;
-}
-
 @media (max-width: 768px) {
   .repo-title {
     font-size: 1.45rem;
   }
+}
 
-  .repo-description {
-    font-size: .9rem;
-  }
+.repo-topics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+  margin-top: 1rem;
+  width: 100%;
+  padding-bottom: 2rem;
+}
+
+.no-topics-span {
+  color: var(--gray);
+  font-style: italic;
+  text-align: center;
+  border-radius: 5000rem;
+  padding: .2rem .5rem;
+  min-width: max-content;
+}
+
+.repo-topics .topic {
+  border-radius: 5000rem;
+  padding: .2rem .5rem;
+  background-color: var(--gray);
+  color: black;
+  min-width: max-content;
+  transform: translateY(-30%);
+}
+
+.repository.visible .repo-topics .topic {
+  transform: unset;
 }
 
 .repo-languages {
@@ -176,12 +191,14 @@ section.repository-list {
   align-items: center;
   margin-top: 1rem;
   border-radius: 500rem;
-  width: 0;
-  transition-property: width, opacity !important;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition-property: transform, opacity !important;
 }
 
 .repository.visible .repo-languages {
-  width: 100%;
+  transform: scaleX(1);
 }
 
 .language {
@@ -235,79 +252,30 @@ section.repository-list {
   color: rgb(189, 189, 189);
 }
 
-.repo-topics {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-  gap: .8rem;
-  margin-top: 1rem;
-  width: 100%;
-  padding-bottom: 2rem;
-}
-
-.no-topics-span {
-  color: var(--gray);
-  font-style: italic;
-  text-align: center;
-  border-radius: 5000rem;
-  padding: .2rem .5rem;
-  min-width: max-content;
-}
-
-.repo-topics .topic {
-  border-radius: 5000rem;
-  padding: .2rem .5rem;
-  background-color: var(--accent);
-  color: black;
-  min-width: max-content;
-  transform: translateY(30%);
-}
-
-.repository.visible .repo-topics .topic {
-  transform: unset;
-}
-
-.divider {
-  width: 100%;
-  height: 1px;
-  background-color: var(--gray);
-  opacity: .5;
-  margin-block: 2rem;
-}
-
-.repo-info * {
-  transition-delay: 800ms !important;
-}
-
-.repo-info {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.info-span {
-  display: flex;
-  flex-direction: column;
-  gap: .3rem;
-}
-
-.info-span strong {
+.repo-source-button {
+  padding: .5rem 1rem;
   font-size: 1.1rem;
-}
-
-.span-data {
   display: flex;
-  gap: .2rem;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  border: solid 2px var(--accent);
+  outline: none;
+  border-radius: .3rem;
+  transition: box-shadow 200ms ease-in-out, color 200ms ease-in-out;
+  box-shadow: 0 0 0 0 var(--accent) inset;
+  overflow: hidden;
 }
 
-.span-data svg path {
-  fill: white;
+.repo-source-button:where(:hover, :focus) {
+  box-shadow: 8rem 0 0 0 var(--accent) inset;
+  color: black;
 }
 
 /* error handling */
